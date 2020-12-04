@@ -7,21 +7,12 @@
 .. image:: https://codecov.io/gh/lietu/saatja/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/lietu/saatja
 
+.. image:: https://img.shields.io/docker/pulls/lietu/saatja
+    :target: https://hub.docker.com/r/lietu/saatja
+
 .. image:: https://img.shields.io/github/issues/lietu/saatja
     :target: https://github.com/lietu/saatja/issues
     :alt: GitHub issues
-
-.. image:: https://img.shields.io/pypi/dm/saatja
-    :target: https://pypi.org/project/saatja/
-    :alt: PyPI - Downloads
-
-.. image:: https://img.shields.io/pypi/v/saatja
-    :target: https://pypi.org/project/saatja/
-    :alt: PyPI
-
-.. image:: https://img.shields.io/pypi/pyversions/saatja
-    :target: https://pypi.org/project/saatja/
-    :alt: PyPI - Python Version
 
 .. image:: https://img.shields.io/badge/License-BSD%203--Clause-blue.svg
     :target: https://opensource.org/licenses/BSD-3-Clause

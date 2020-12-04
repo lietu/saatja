@@ -17,8 +17,8 @@ install:
 script:
   - export PYTHONDONTWRITEBYTECODE=1 # Hopefully prevents flaky tests
   - poetry run coverage run --include "saatja/*" -m pytest
-  - docker build . -t saatja:latest
-  - if [[ "$TRAVIS_TAG" != "" ]]; then docker tag saatja:latest "saatja:$TRAVIS_TAG"; fi
+  - docker build . -t lietu/saatja:latest
+  - if [[ "$TRAVIS_TAG" != "" ]]; then docker tag lietu/saatja:latest "lietu/saatja:$TRAVIS_TAG"; fi
   - if [[ "$TRAVIS_PYTHON_VERSION" == "3.8" ]]; then
     poetry run coverage xml -i;
     mkdir coverage-reports;
@@ -29,5 +29,5 @@ script:
 after_success:
   - codecov
   - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-  - docker push saatja:latest
-  - if [[ "$TRAVIS_TAG" != "" ]]; then docker push "saatja:$TRAVIS_TAG"; fi
+  - docker push lietu/saatja:latest
+  - if [[ "$TRAVIS_TAG" != "" ]]; then docker push "lietu/saatja:$TRAVIS_TAG"; fi
