@@ -33,6 +33,16 @@ The main goal is to have a tool that can deliver webhooks effectively, ensuring 
 Primarily intended to be deployed to Google Cloud Run with Google Cloud Scheduler triggering it once per minute, but other deployments may be supported too with some changes.
 
 
+API Docs
+--------
+
+View the API docs for Saatja at `https://lietu.github.io/saatja/ <https://lietu.github.io/saatja/>`_.
+
+
+.. image:: ./openapi-docs.jpg
+    :target: https://lietu.github.io/saatja/
+
+
 Google Cloud Run Deployment
 ---------------------------
 
