@@ -1,0 +1,336 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Contract service",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/task/": {
+      "post": {
+        "summary": "Create a task",
+        "description": "Register a task to call a webhook at a given time",
+        "operationId": "create_task_task__post",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Api-Key",
+              "type": "string"
+            },
+            "name": "x-api-key",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTask"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/task/{task_id}": {
+      "get": {
+        "summary": "Read a task",
+        "description": "Check the status of the task based on the task ID received when creating the task",
+        "operationId": "get_task_task__task_id__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Task Id",
+              "type": "string"
+            },
+            "name": "task_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Api-Key",
+              "type": "string"
+            },
+            "name": "x-api-key",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a task",
+        "description": "You can delete tasks before they are executed to abort or reschedule their delivery for another time",
+        "operationId": "delete_task_task__task_id__delete",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Task Id",
+              "type": "string"
+            },
+            "name": "task_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Api-Key",
+              "type": "string"
+            },
+            "name": "x-api-key",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/task/{task_id}/errors/{attempted_delivery}": {
+      "get": {
+        "summary": "Explain error in webhook delivery attempt",
+        "description": "If reading a task shows errors, you can use this to check the specifics of the failure to help with debugging",
+        "operationId": "get_task_error_task__task_id__errors__attempted_delivery__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Task Id",
+              "type": "string"
+            },
+            "name": "task_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Attempted Delivery",
+              "type": "string"
+            },
+            "name": "attempted_delivery",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Api-Key",
+              "type": "string"
+            },
+            "name": "x-api-key",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/scheduler/run-tasks": {
+      "post": {
+        "summary": "Run pending tasks",
+        "description": "Fires off webhooks that are right now pending to be launched. Should be called every minute.",
+        "operationId": "run_tasks_scheduler_run_tasks_post",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "title": "Authorization",
+              "type": "string"
+            },
+            "name": "authorization",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/scheduler/maintenance": {
+      "post": {
+        "summary": "Perform system maintenance",
+        "description": "Periodical maintenance tasks, database cleanup, etc. are performed here. Should likely be called about once a day.",
+        "operationId": "maintenance_scheduler_maintenance_post",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "title": "Authorization",
+              "type": "string"
+            },
+            "name": "authorization",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CreateTask": {
+        "title": "CreateTask",
+        "required": ["url", "when"],
+        "type": "object",
+        "properties": {
+          "url": {
+            "title": "Url",
+            "maxLength": 65536,
+            "minLength": 1,
+            "type": "string",
+            "description": "Webhook destination URL",
+            "format": "uri"
+          },
+          "when": {
+            "title": "When",
+            "type": "string",
+            "description": "Approximate RFC 3339 datetime after which it is ok to send webhook",
+            "format": "date-time"
+          }
+        }
+      },
+      "HTTPValidationError": {
+        "title": "HTTPValidationError",
+        "type": "object",
+        "properties": {
+          "detail": {
+            "title": "Detail",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            }
+          }
+        }
+      },
+      "ValidationError": {
+        "title": "ValidationError",
+        "required": ["loc", "msg", "type"],
+        "type": "object",
+        "properties": {
+          "loc": {
+            "title": "Location",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
