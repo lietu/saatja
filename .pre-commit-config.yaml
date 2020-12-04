@@ -12,10 +12,7 @@ repos:
       # All non-bat files should end with LF
       - id: mixed-line-ending
         args: ["--fix=lf"]
-        exclude: |
-          (?x)(
-            \.bat$
-          )
+        exclude: \.bat$
 
       # Bat files should be CRLF ending
       - id: mixed-line-ending
