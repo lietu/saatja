@@ -12,6 +12,7 @@ python:
   - "pypy3"
 
 install:
+  - pip install -U poetry
   - poetry install
 
 script:
