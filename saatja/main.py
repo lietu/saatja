@@ -12,7 +12,7 @@ from saatja.db.utils import configure_db
 from saatja.log import logger
 from saatja.settings import conf
 
-OPENAPI_SPEC_FILE = "openapi.json"
+OPENAPI_SPEC_FILE = "openapi/openapi.json"
 
 app = FastAPI(title="Contract service", version="1.0.0")
 app.include_router(task_router, prefix="/task")

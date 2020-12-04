@@ -1,24 +1,31 @@
 sudo: required
-
-services:
-  - docker
-
 dist: focal
-
 language: python
 
 python:
   - "3.8"
 
+services:
+  - docker
+
+env:
+  - PYTHONDONTWRITEBYTECODE=1 # Hopefully prevents flaky tests
+
+# Prepare environment
 install:
   - pip install -U poetry
   - poetry install
 
+# Run tests and build images
 script:
-  - export PYTHONDONTWRITEBYTECODE=1 # Hopefully prevents flaky tests
+  # Unit tests
   - poetry run coverage run --include "saatja/*" -m pytest
+
+  # Docker builds
   - docker build . -t lietu/saatja:latest
   - if [[ "$TRAVIS_TAG" != "" ]]; then docker tag lietu/saatja:latest "lietu/saatja:$TRAVIS_TAG"; fi
+
+  # Put coverage report in location expected by codecov
   - if [[ "$TRAVIS_PYTHON_VERSION" == "3.8" ]]; then
     poetry run coverage xml -i;
     mkdir coverage-reports;
@@ -26,8 +33,19 @@ script:
     mv coverage.xml coverage-reports/coverage-python.xml;
     fi
 
+# Publish code coverage report and Docker images
 after_success:
   - codecov
   - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
   - docker push lietu/saatja:latest
   - if [[ "$TRAVIS_TAG" != "" ]]; then docker push "lietu/saatja:$TRAVIS_TAG"; fi
+
+# Deploy OpenAPI docs to GitHub Pages
+deploy:
+  provider: pages
+  skip-cleanup: true
+  local-dir: openapi
+  github-token: $GITHUB_TOKEN
+  keep_history: true
+  on:
+    branch: master
