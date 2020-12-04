@@ -1,0 +1,3 @@
+[bandit]
+targets: saatja
+exclude: saatja/tests/*,saatja/*/tests/*,saatja/*/*/tests/*,saatja/*/*/*/tests/*

@@ -1,0 +1,33 @@
+sudo: required
+
+services:
+  - docker
+
+dist: focal
+
+language: python
+
+python:
+  - "3.8"
+  - "pypy3"
+
+install:
+  - poetry install
+
+script:
+  - export PYTHONDONTWRITEBYTECODE=1 # Hopefully prevents flaky tests
+  - poetry run coverage run --include "saatja/*" -m pytest
+  - docker build . -t saatja:latest
+  - if [[ "$TRAVIS_TAG" != "" ]]; then docker tag saatja:latest "saatja:$TRAVIS_TAG"; fi
+  - if [[ "$TRAVIS_PYTHON_VERSION" == "3.8" ]]; then
+    poetry run coverage xml -i;
+    mkdir coverage-reports;
+    mkdir -p coverage-reports;
+    mv coverage.xml coverage-reports/coverage-python.xml;
+    fi
+
+after_success:
+  - codecov
+  - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+  - docker push saatja:latest
+  - if [[ "$TRAVIS_TAG" != "" ]]; then docker push "saatja:$TRAVIS_TAG"; fi
