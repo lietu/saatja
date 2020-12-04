@@ -14,7 +14,7 @@ from saatja.settings import conf
 
 OPENAPI_SPEC_FILE = "openapi/openapi.json"
 
-app = FastAPI(title="Contract service", version="1.0.0")
+app = FastAPI(title="Saatja webhook delivery system", version="1.0.0")
 app.include_router(task_router, prefix="/task")
 app.include_router(scheduler_router, prefix="/scheduler")
 app.logger = logger

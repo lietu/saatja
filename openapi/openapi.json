@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "title": "Contract service",
+    "title": "Saatja webhook delivery system",
     "version": "1.0.0"
   },
   "paths": {
