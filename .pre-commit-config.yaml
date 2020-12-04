@@ -4,10 +4,11 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v2.5.0
     hooks:
+      # Clean up trailing whitespace
       - id: trailing-whitespace
-        exclude: ^.*/vendor/.*$
+
+      # Ensure files have a proper EOL
       - id: end-of-file-fixer
-        exclude: ^.*/vendor/.*$
 
       # All non-bat files should end with LF
       - id: mixed-line-ending
@@ -24,18 +25,20 @@ repos:
   - repo: https://github.com/ryanrhee/shellcheck-py
     rev: v0.7.1.1
     hooks:
+      # Run shellcheck for all .sh files
       - id: shellcheck
-        exclude: ^.*/vendor/
 
   - repo: https://github.com/psf/black
     rev: stable
     hooks:
+      # Format Python files
       - id: black
-        language_version: python3.6
+        language_version: python3.8
 
   - repo: https://github.com/PyCQA/bandit
     rev: "master"
     hooks:
+      # Do a security scan with Bandit
       - id: bandit
         args: ["--ini", ".bandit", "-r"]
         exclude: |
@@ -45,6 +48,7 @@ repos:
 
   - repo: local
     hooks:
+      # Execute unit tests
       - id: pytest
         name: Run unit tests
         entry: poetry run pytest
@@ -54,6 +58,7 @@ repos:
 
   - repo: local
     hooks:
+      # Export the OpenAPI spec - BEFORE PRETTIER FORMATS IT
       - id: export-openapi-spec
         name: Export OpenAPI spec
         entry: poetry run export-saatja-openapi
@@ -69,4 +74,5 @@ repos:
   - repo: https://github.com/prettier/prettier
     rev: master
     hooks:
+      # Run prettier to format non-Python files
       - id: prettier
