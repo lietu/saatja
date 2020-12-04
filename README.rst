@@ -5,7 +5,7 @@
     :target: https://github.com/psf/black
 
 .. image:: https://codecov.io/gh/lietu/saatja/branch/master/graph/badge.svg
-    :target: https://codecov.io/gh/lietu/saatja
+    :target: https://app.codecov.io/gh/lietu/saatja/branch/master
 
 .. image:: https://img.shields.io/docker/pulls/lietu/saatja
     :target: https://hub.docker.com/r/lietu/saatja
