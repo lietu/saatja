@@ -7,7 +7,7 @@ import uvicorn
 from fastapi import FastAPI, Request
 
 from saatja.api.scheduler import scheduler_router
-from saatja.api.tasks import task_router
+from saatja.api.task import task_router
 from saatja.db.utils import configure_db
 from saatja.log import logger
 from saatja.settings import conf

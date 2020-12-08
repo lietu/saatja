@@ -36,7 +36,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/CreateTaskResponse"
+                }
               }
             }
           },
@@ -56,7 +58,7 @@
     "/task/{task_id}": {
       "get": {
         "summary": "Read a task",
-        "description": "Check the status of the task based on the task ID received when creating the task",
+        "description": "NOT IMPLEMENTED. Check the status of the task based on the task ID received when creating the task",
         "operationId": "get_task_task__task_id__get",
         "parameters": [
           {
@@ -83,7 +85,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/GetTaskResponse"
+                }
               }
             }
           },
@@ -101,7 +105,7 @@
       },
       "delete": {
         "summary": "Delete a task",
-        "description": "You can delete tasks before they are executed to abort or reschedule their delivery for another time",
+        "description": "NOT IMPLEMENTED. You can delete tasks before they are executed to abort or reschedule their delivery for another time",
         "operationId": "delete_task_task__task_id__delete",
         "parameters": [
           {
@@ -143,7 +147,7 @@
     "/task/{task_id}/errors/{attempted_delivery}": {
       "get": {
         "summary": "Explain error in webhook delivery attempt",
-        "description": "If reading a task shows errors, you can use this to check the specifics of the failure to help with debugging",
+        "description": "NOT IMPLEMENTED. If reading a task shows errors, you can use this to check the specifics of the failure to help with debugging",
         "operationId": "get_task_error_task__task_id__errors__attempted_delivery__get",
         "parameters": [
           {
@@ -179,7 +183,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/GetTaskErrorResponse"
+                }
               }
             }
           },
@@ -213,13 +219,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
+          "204": {
+            "description": "Successful Response"
           },
           "422": {
             "description": "Validation Error",
@@ -237,7 +238,7 @@
     "/scheduler/maintenance": {
       "post": {
         "summary": "Perform system maintenance",
-        "description": "Periodical maintenance tasks, database cleanup, etc. are performed here. Should likely be called about once a day.",
+        "description": "NOT IMPLEMENTED. Periodical maintenance tasks, database cleanup, etc. are performed here. Should likely be called about once a day.",
         "operationId": "maintenance_scheduler_maintenance_post",
         "parameters": [
           {
@@ -293,6 +294,74 @@
             "type": "string",
             "description": "Approximate RFC 3339 datetime after which it is ok to send webhook",
             "format": "date-time"
+          },
+          "payload": {
+            "title": "Payload",
+            "description": "Webhook payload"
+          }
+        }
+      },
+      "CreateTaskResponse": {
+        "title": "CreateTaskResponse",
+        "required": ["id"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string",
+            "description": "Task ID"
+          }
+        }
+      },
+      "GetTaskErrorResponse": {
+        "title": "GetTaskErrorResponse",
+        "required": ["code", "response"],
+        "type": "object",
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer",
+            "description": "Response HTTP status code"
+          },
+          "response": {
+            "title": "Response",
+            "type": "string",
+            "description": "The response body"
+          }
+        }
+      },
+      "GetTaskResponse": {
+        "title": "GetTaskResponse",
+        "required": ["url", "when", "delivered", "errors"],
+        "type": "object",
+        "properties": {
+          "url": {
+            "title": "Url",
+            "maxLength": 65536,
+            "minLength": 1,
+            "type": "string",
+            "description": "Webhook destination URL",
+            "format": "uri"
+          },
+          "when": {
+            "title": "When",
+            "type": "string",
+            "description": "Approximate RFC 3339 datetime after which it is ok to send webhook",
+            "format": "date-time"
+          },
+          "delivered": {
+            "title": "Delivered",
+            "type": "string",
+            "description": "RFC 3339 datetime on which the webhook was delivered",
+            "format": "date-time"
+          },
+          "errors": {
+            "title": "Errors",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of the last timestamps of failed deliveries"
           }
         }
       },

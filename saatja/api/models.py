@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional, List
+from typing import Optional, List, Any
 
 from pydantic import BaseModel, Field, AnyHttpUrl
 
@@ -10,6 +10,7 @@ class CreateTask(BaseModel):
         ...,
         description="Approximate RFC 3339 datetime after which it is ok to send webhook",
     )
+    payload: Any = Field(None, description="Webhook payload")
 
 
 class CreateTaskResponse(BaseModel):
