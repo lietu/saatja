@@ -72,7 +72,50 @@ Cloud Run unfortunately cannot directly pull images from Docker Hub, so you need
         --allow-unauthenticated \
         --set-env-vars= "^@^API_KEYS=api,key,list@WEBHOOK_PREFIXES=https://,and,so,on"
 
+The environment variables you can set are:
+
+.. code-block::
+
+    API_KEYS=api,key,list  # Accepted keys for X-Api-Key header for Task APIs
+    WEBHOOK_PREFIXES=https://some.url  # Optional limit for allowed webhook prefixes for security
+    DB_COLLECTION_PREFIX=saatja  # If you want the Firestore collections to be prefixed in a shared GCP project
+
 You may want to check out `cloudbuild-saatja.yaml <./cloudbuild-saatja.yaml>`_ for an example on how to automate this via `Google Cloud Build <https://cloud.google.com/cloud-build>`_.
+
+Saatja should be triggered by Cloud Scheduler every minute, you can either configure that manually at `https://console.cloud.google.com/cloudscheduler <https://console.cloud.google.com/cloudscheduler>`_ or via the gcloud CLI.
+
+.. code-block:: bash
+
+    # You will need the gcloud alpha commands for this
+    gcloud components install alpha
+
+    # The URI should be your Cloud Run deployment URL
+    gcloud alpha scheduler jobs create http \
+        saatja-run-tasks \
+        --schedule="* * * * *" \
+        --uri=https://saatja-x.a.run.app/scheduler/run-tasks \
+
+You can create a webhook task to be delivered via the ``POST /task/`` endpoint, so e.g.:
+
+.. code-block:: bash
+
+    curl -X POST https://saatja-x.a.run.app/task/ \
+        -H 'Content-Type: application/json; charset=utf-8' \
+        --data-binary @- <<'END'
+    {
+        "url": "https://localhost/webhook/test",
+        "when": "2002-02-02T19:19:19Z",
+        "payload": {
+            "status": "ok",
+            "items": 7,
+            "nest": {
+                "yes": true
+            }
+        }
+    }
+    END
+
+For details check the `API docs <https://lietu.github.io/saatja/>`_.
 
 
 Development
