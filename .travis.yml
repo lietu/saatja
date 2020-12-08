@@ -11,9 +11,15 @@ services:
 env:
   - PYTHONDONTWRITEBYTECODE=1 # Hopefully prevents flaky tests
 
+cache:
+  pip: true
+  directories:
+    - .venv
+
 # Prepare environment
 install:
   - pip install -U poetry
+  - poetry config settings.virtualenvs.in-project true
   - poetry install
 
 # Run tests and build images
