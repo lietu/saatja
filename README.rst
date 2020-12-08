@@ -50,18 +50,29 @@ This is the primary intended way of deployment. Google Cloud Run is a very cost-
 
 You will need the Google Cloud SDK installed for these instructions, but you can perform this manually through the Google Cloud Console as well. Check `https://cloud.google.com/sdk/docs/install <https://cloud.google.com/sdk/docs/install>`_ for installation instructions.
 
+Cloud Run unfortunately cannot directly pull images from Docker Hub, so you need to pull and push to your own registry.
+
 .. code-block:: bash
 
     gcloud login
     gcloud config set project <your-gcp-project-name>
 
+    gcloud auth configure-docker
+    docker pull lietu/saatja:latest
+
+    # Check registry URLs https://cloud.google.com/container-registry/docs/overview#registries_registries
+    docker tag lietu/saatja:latest ([eu|us|asia].)gcr.io/your-google-project/saatja:latest
+    docker push ([eu|us|asia].)gcr.io/your-google-project/saatja:latest
+
     # Check https://cloud.google.com/about/locations for regions with Cloud Run support
     gcloud run deploy saatja \
-        --image saatja/saatja \
+        --image ([eu|us|asia].)gcr.io/your-google-project/saatja:latest \
         --region europe-west1 \
         --platform managed \
         --allow-unauthenticated \
         --set-env-vars= "^@^API_KEYS=api,key,list@WEBHOOK_PREFIXES=https://,and,so,on"
+
+You may want to check out `cloudbuild-saatja.yaml <./cloudbuild-saatja.yaml>`_ for an example on how to automate this via `Google Cloud Build <https://cloud.google.com/cloud-build>`_.
 
 
 Development

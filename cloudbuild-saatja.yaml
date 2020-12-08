@@ -1,0 +1,46 @@
+substitutions:
+  _VERSION: latest
+  _PROJECT: google-cloud-project-name
+  _REGISTRY: eu.gcr.io # https://cloud.google.com/container-registry/docs/overview#registries_registries
+  _CLOUD_RUN_DEPLOYMENT: saatja
+
+steps:
+  # Pull from Docker Hub
+  - name: "gcr.io/cloud-builders/docker"
+    id: "pull"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        docker pull lietu/saatja:${_VERSION}
+
+  # Tag and push to local
+  - name: "gcr.io/cloud-builders/docker"
+    id: "tag-and-push"
+    waitFor: ["pull"]
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        docker tag lietu/saatja:${_VERSION} ${_REGISTRY}/${_PROJECT}/saatja:${_VERSION}
+        docker push ${_REGISTRY}/${_PROJECT}/saatja:${_VERSION}
+
+  # Deployment to Cloud Run
+  - name: "gcr.io/cloud-builders/gcloud"
+    id: "deploy-to-cloudrun"
+    waitFor: ["tag-and-push"]
+    args:
+      [
+        "--project",
+        "${_PROJECT}",
+        "run",
+        "deploy",
+        "${_CLOUD_RUN_DEPLOYMENT}",
+        "--image",
+        "${_REGISTRY}/${_PROJECT}/saatja:${_VERSION}",
+        "--region",
+        "europe-north1",
+        "--platform",
+        "managed",
+        "--allow-unauthenticated",
+      ]
