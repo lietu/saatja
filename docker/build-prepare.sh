@@ -20,6 +20,8 @@ apk add --update --no-cache --virtual build-dependencies \
     python3-dev \
     build-base \
     linux-headers \
+    libffi \
+    libffi-dev \
     gcc \
     curl \
     musl-dev
