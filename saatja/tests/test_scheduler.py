@@ -1,5 +1,4 @@
 import pytest
-from fastapi import HTTPException
 from fastapi.testclient import TestClient
 from firedantic import ModelNotFoundError
 
@@ -30,14 +29,15 @@ def get_request_mock():
     }
 
     async def _mock_make_request(task: ScheduledTask):
-        return requests[task.url].pop(0)
+        resp = requests[task.url].pop(0)
+        return resp.status, await resp.text()
 
     return requests, _mock_make_request
 
 
-def mock_check_authorization(authorization):
-    if authorization != SCHEDULER_HEADERS["Authorization"]:
-        raise HTTPException(403, "Access denied.")
+def mock_check_authorization(*args):
+    # Bypass authentication
+    pass
 
 
 def test_task_delivery(client: TestClient, monkeypatch):

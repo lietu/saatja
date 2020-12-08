@@ -24,20 +24,17 @@ class ScheduledTask(Model):
         logger.info(f"Trying to deliver webhook to {safe_url}")
         when = now_utc()
         try:
-            response = await self._make_request()
-            text = await response.text()
-            if 200 <= response.status <= 299:
+            status, text = await self._make_request()
+            if 200 <= status <= 299:
                 # Success
-                self._to_delivered_task(when, response.status, text)
+                self._to_delivered_task(when, status, text)
                 self.delete()
                 logger.info(f"Successfully delivered webhook to {safe_url}")
                 return True
             else:
                 # Report error
-                self._add_error(when, response.status, text)
-                logger.error(
-                    f"Got error {response.status} delivering webhook to {safe_url}"
-                )
+                self._add_error(when, status, text)
+                logger.error(f"Got error {status} delivering webhook to {safe_url}")
         except Exception as e:
             # Report error
             self._add_error(when, -1, str(e))
@@ -57,11 +54,11 @@ class ScheduledTask(Model):
             url = url.split("?", 2)[0]
         return url
 
-    async def _make_request(self) -> aiohttp.ClientResponse:
+    async def _make_request(self) -> (int, str):
         """This logic is annoyingly deep so made it into a function instead."""
         async with aiohttp.ClientSession() as session:
             async with session.post(self.url, json=self.payload) as response:
-                return response
+                return response.status, await response.text()
 
     def _to_delivered_task(self, when: datetime, status: int, response: str):
         dt = DeliveredTask(

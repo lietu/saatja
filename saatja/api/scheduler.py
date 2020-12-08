@@ -1,4 +1,5 @@
 import asyncio
+from http import HTTPStatus
 
 from fastapi import APIRouter, Depends, Response
 
@@ -21,6 +22,7 @@ async def run_tasks():
     tasks = ScheduledTask.find({"when": {"<=": now_utc()}})
     logger.info("Found {count} tasks to run", count=len(tasks))
     await asyncio.gather(*[task.try_deliver() for task in tasks])
+    return Response(status_code=HTTPStatus.NO_CONTENT)
 
 
 @scheduler_router.post(
