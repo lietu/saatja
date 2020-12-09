@@ -211,10 +211,19 @@
           {
             "required": false,
             "schema": {
-              "title": "Authorization",
+              "title": "User-Agent",
               "type": "string"
             },
-            "name": "authorization",
+            "name": "user-agent",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cloudscheduler",
+              "type": "string"
+            },
+            "name": "x-cloudscheduler",
             "in": "header"
           }
         ],
@@ -244,10 +253,19 @@
           {
             "required": false,
             "schema": {
-              "title": "Authorization",
+              "title": "User-Agent",
               "type": "string"
             },
-            "name": "authorization",
+            "name": "user-agent",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cloudscheduler",
+              "type": "string"
+            },
+            "name": "x-cloudscheduler",
             "in": "header"
           }
         ],
