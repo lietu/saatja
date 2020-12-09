@@ -1,13 +1,19 @@
 from functools import wraps
 from os import environ
 
+environ["LOGURU_FORMAT"] = (
+    "<green>{name}</green>:"
+    "<magenta>{function}</magenta>:"
+    "<cyan>{line}</cyan> - "
+    "<lvl>{message}</lvl>"
+)
+
 import pytest
 from fastapi.testclient import TestClient
 
 from saatja.db.utils import configure_mock_db
 from saatja.main import app
 
-environ["LOGURU_FORMAT"] = "<lvl>{message}</lvl>"
 configure_mock_db()
 
 
