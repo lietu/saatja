@@ -167,5 +167,3 @@ Contributing
 ============
 
 This project is run on GitHub using the issue tracking and pull requests here. If you want to contribute, feel free to `submit issues <https://github.com/lietu/saatja/issues>`_ (incl. feature requests) or PRs here.
-
-To test changes locally ``python setup.py develop`` is a good way to run this, and you can ``python setup.py develop --uninstall`` afterwards (you might want to also use the ``--user`` flag).
