@@ -1,6 +1,7 @@
 import pytest
 from fastapi.testclient import TestClient
 from firedantic import ModelNotFoundError
+from _pytest.monkeypatch import MonkeyPatch
 
 import saatja.request_dependencies as request_dependencies
 from saatja.db.task import ScheduledTask, DeliveredTask, TaskError
@@ -40,7 +41,7 @@ def mock_check_authorization(*args):
     pass
 
 
-def test_task_delivery(client: TestClient, monkeypatch):
+def test_task_delivery(client: TestClient, monkeypatch: MonkeyPatch):
     requests, request_mock = get_request_mock()
     monkeypatch.setattr(ScheduledTask, "_make_request", request_mock)
     monkeypatch.setattr(

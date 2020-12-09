@@ -11,3 +11,6 @@ class Settings(BaseSettings):
 
 
 conf = Settings()
+# Ensure "if WEBHOOK_PREFIXES" does not pass with empty string
+if conf.WEBHOOK_PREFIXES == {""}:
+    conf.WEBHOOK_PREFIXES = set()

@@ -35,6 +35,9 @@ def initialize():
     configure_db()
 
 
+# Entrypoints for Poetry
+
+
 def main():
     uvicorn.run(
         "saatja.main:app",
@@ -68,6 +71,7 @@ def openapi():
 
 
 if __name__ == "__main__":
+    # Used for PyCharm debugger integration
     which = sys.argv[1]
     if which == "main":
         main()
