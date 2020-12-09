@@ -19,7 +19,7 @@ cache:
 # Prepare environment
 install:
   - pip install -U poetry
-  - poetry config settings.virtualenvs.in-project true
+  - poetry config virtualenvs.in-project true
   - poetry install
 
 # Run tests and build images
