@@ -155,6 +155,9 @@ Before committing anything make sure you run `pre-commit <https://pre-commit.com
     pre-commit run --all-files
 
 
+TODO: It would be real nice if we had a way to emulate the Scheduler calls once per minute locally in development mode.
+
+
 License
 -------
 

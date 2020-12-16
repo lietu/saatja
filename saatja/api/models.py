@@ -16,15 +16,14 @@ class CreateTask(BaseModel):
 
     @validator("url")
     def url_has_valid_prefix(cls, url):
+        # cls is intentional - pydantic validators require it like this
+
         if conf.WEBHOOK_PREFIXES:
-            has_prefix = False
-            for prefix in conf.WEBHOOK_PREFIXES:
-                if url.startswith(prefix):
-                    has_prefix = True
-                    break
+            has_prefix = any(url.startswith(prefix) for prefix in conf.WEBHOOK_PREFIXES)
 
             if not has_prefix:
                 raise ValueError("Webhook URL is not allowed")
+
         return url
 
 

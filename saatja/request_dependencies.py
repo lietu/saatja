@@ -22,7 +22,8 @@ def verified_scheduler(
 ):
     """
     Verify request is coming from Google Cloud Scheduler
-    :param authorization:
+
+    TODO: This does not actually do anything sensible yet.
     """
 
     logger.info("Verifying request. {headers}", headers=request.headers)

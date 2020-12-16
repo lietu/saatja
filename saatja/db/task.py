@@ -9,7 +9,7 @@ from saatja.utils import now_utc
 
 
 class ScheduledTask(Model):
-    __collection__ = "scheduled_tasks"
+    __collection__ = "scheduledTasks"
 
     url: str
     when: datetime
@@ -21,7 +21,7 @@ class ScheduledTask(Model):
         :return: If it was successful or not
         """
         safe_url = self._get_safe_url()
-        logger.info(f"Trying to deliver webhook to {safe_url}")
+        logger.info("Trying to deliver webhook to {safe_url}", safe_url=safe_url)
         when = now_utc()
         try:
             status, text = await self._make_request()
@@ -29,17 +29,25 @@ class ScheduledTask(Model):
                 # Success
                 self._to_delivered_task(when, status, text)
                 self.delete()
-                logger.info(f"Successfully delivered webhook to {safe_url}")
+                logger.info(
+                    "Successfully delivered webhook to {safe_url}", safe_url=safe_url
+                )
                 return True
             else:
                 # Report error
                 self._add_error(when, status, text)
-                logger.error(f"Got error {status} delivering webhook to {safe_url}")
+                logger.error(
+                    "Got error {status} delivering webhook to {safe_url}",
+                    status=status,
+                    safe_url=safe_url,
+                )
         except Exception as e:
             # Report error
             self._add_error(when, -1, str(e))
             logger.exception(
-                f"Caught {type(e).__name__} delivering webhook to {safe_url}"
+                "Caught {t} delivering webhook to {safe_url}",
+                t=type(e).__name__,
+                safe_url=safe_url,
             )
 
         return False
@@ -79,7 +87,7 @@ class ScheduledTask(Model):
 
 
 class DeliveredTask(Model):
-    __collection__ = "delivered_tasks"
+    __collection__ = "deliveredTasks"
 
     url: str
     when: datetime
@@ -89,7 +97,7 @@ class DeliveredTask(Model):
 
 
 class TaskError(Model):
-    __collection__ = "task_errors"
+    __collection__ = "taskErrors"
 
     task_id: str
     attempted_delivery: datetime

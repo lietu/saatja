@@ -71,7 +71,7 @@ repos:
             saatja/request_dependencies.py
           )$
 
-  - repo: https://github.com/prettier/prettier
+  - repo: https://github.com/pre-commit/mirrors-prettier
     rev: master
     hooks:
       # Run prettier to format non-Python files

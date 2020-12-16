@@ -38,18 +38,19 @@ def initialize():
 # Entrypoints for Poetry
 
 
-def main():
+def main(log_level="info", reload=False):
     uvicorn.run(
         "saatja.main:app",
         host="0.0.0.0",  # nosec 0.0.0.0 is not a mistake
         port=conf.PORT,
-        log_level="info",
+        log_level=log_level,
+        reload=reload,
     )
 
 
 def dev():
     environ["FIRESTORE_EMULATOR_HOST"] = "127.0.0.1:8686"
-    main()
+    main(log_level="debug", reload=True)
 
 
 def openapi():
