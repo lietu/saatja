@@ -4,57 +4,52 @@ from os import environ
 from pathlib import Path
 
 import uvicorn
-from fastapi import FastAPI, Request
+from uvicorn.supervisors import ChangeReload
 
-from saatja.api.scheduler import scheduler_router
-from saatja.api.task import task_router
-from saatja.db.utils import configure_db
-from saatja.log import logger
 from saatja.settings import conf
 
 OPENAPI_SPEC_FILE = "openapi/openapi.json"
-
-app = FastAPI(title="Saatja webhook delivery system", version="1.0.0")
-app.include_router(task_router, prefix="/task")
-app.include_router(scheduler_router, prefix="/scheduler")
-app.logger = logger
-
-
-@app.middleware("http")
-async def add_security_headers(request: Request, call_next):
-    response = await call_next(request)
-    response.headers["X-Frame-Options"] = "DENY"
-    response.headers["X-Content-Type-Options"] = "nosniff"
-    response.headers["X-XSS-Protection"] = "1; mode=block"
-    response.headers["Strict-Transport-Security"] = "31536000"  # 1 year
-    return response
-
-
-@app.on_event("startup")
-def initialize():
-    configure_db()
 
 
 # Entrypoints for Poetry
 
 
-def main(log_level="info", reload=False):
-    uvicorn.run(
-        "saatja.main:app",
+def main(log_level="info"):
+    server = uvicorn.Server(
+        uvicorn.Config(
+            app="saatja.app:app",
+            host="0.0.0.0",  # nosec 0.0.0.0 is not a mistake
+            port=conf.PORT,
+            log_level=log_level,
+            reload=False,
+        ),
+    )
+    server.run()
+
+
+def dev(log_level="debug"):
+    environ["FIRESTORE_EMULATOR_HOST"] = "127.0.0.1:8686"
+    config = uvicorn.Config(
+        app="saatja.app:app",
         host="0.0.0.0",  # nosec 0.0.0.0 is not a mistake
         port=conf.PORT,
         log_level=log_level,
-        reload=reload,
+        reload=False,
     )
+    server = uvicorn.Server(config)
 
+    # Activate logging configuration
+    from saatja.log import logger
 
-def dev():
-    environ["FIRESTORE_EMULATOR_HOST"] = "127.0.0.1:8686"
-    main(log_level="debug", reload=True)
+    _ = logger
+
+    supervisor = ChangeReload(config, target=server.run, sockets=[config.bind_socket()])
+    supervisor.run()
 
 
 def openapi():
     from deepdiff import DeepDiff
+    from saatja.app import app
 
     openapi_file = Path(OPENAPI_SPEC_FILE)
     openapi_spec = app.openapi()

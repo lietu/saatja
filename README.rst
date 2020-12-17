@@ -79,6 +79,7 @@ The environment variables you can set are:
     API_KEYS=api,key,list  # Accepted keys for X-Api-Key header for Task APIs
     WEBHOOK_PREFIXES=https://some.url  # Optional limit for allowed webhook prefixes for security
     DB_COLLECTION_PREFIX=saatja  # If you want the Firestore collections to be prefixed in a shared GCP project
+    GCLOUD_PROJECT=project-name  # You should set this to your Google Cloud project name for logging to work properly
 
 You may want to check out `cloudbuild-saatja.yaml <./cloudbuild-saatja.yaml>`_ for an example on how to automate this via `Google Cloud Build <https://cloud.google.com/cloud-build>`_.
 

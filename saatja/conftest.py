@@ -12,7 +12,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from saatja.db.utils import configure_mock_db
-from saatja.main import app
+from saatja.app import app
 
 configure_mock_db()
 
