@@ -1,6 +1,7 @@
 import json
 import logging
 import sys
+from os import environ
 from uuid import uuid4
 
 from loguru import logger
@@ -9,6 +10,13 @@ from saatja.settings import conf
 
 LOG_LEVEL = logging.DEBUG
 IS_GCLOUD = conf.GCLOUD_PROJECT is not None
+DEFAULT_FORMAT = (
+    "<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | "
+    "<level>{level: <8}</level> | "
+    "<cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - "
+    "<level>{message}</level> "
+    "{extra}"
+)
 
 
 def gcloud_serializer(message):
@@ -81,9 +89,7 @@ def init_logging(logger_):
     else:
         logger_.add(
             sys.stdout,
-            format=(
-                "<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level> {extra}"
-            ),
+            format=environ.get("LOGURU_FORMAT", DEFAULT_FORMAT),
             colorize=True,
             level=logging.DEBUG,
         )
